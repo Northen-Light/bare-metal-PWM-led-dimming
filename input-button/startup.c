@@ -95,8 +95,8 @@ void EXTI9_5_IRQHandler(void) {
     last_btn_press_time = g_ms_ticks;
     count++;
     TIM2_CCR1 += (dir ? step : -step);
-    if (TIM2_CCR1 == 0) dir = 1;
-    if (TIM2_CCR1 == TIM2_ARR + 1) dir = 0;
+    if (TIM2_CCR1 <= 100) dir = 1;
+    if (TIM2_CCR1 >= 900) dir = 0;
   }
 }
 
