@@ -22,10 +22,12 @@ void main(void) {
 
   while(1) {
     if (g_ms_ticks - last_update >= 10) {
+      // update the CCR1 after 10ms window, instead of right after 
+      // value update, to prevent from getting stale CCR1 values
+      if (TIM2_CCR1 == TIM2_ARR + 1) dir = 0;
+      if (TIM2_CCR1 == 0) dir = 1;
       last_update = g_ms_ticks;
       TIM2_CCR1 += (dir ? step : -step);
-      if (TIM2_CCR1 >= 900) dir = 0;
-      if (TIM2_CCR1 <= 100) dir = 1;
     }
   }
 }
