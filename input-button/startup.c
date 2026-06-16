@@ -92,11 +92,13 @@ void HardFault_Handler(void) {
 void EXTI9_5_IRQHandler(void) {
   EXTI_PR |= (1 << 5);
   if ((g_ms_ticks - last_btn_press_time) >= 200) {
+    // update the CCR1 after 10ms window, instead of right after 
+    // value update, to prevent from getting stale CCR1 values
+    if (TIM2_CCR1 == 0) dir = 1;
+    if (TIM2_CCR1 == TIM2_ARR + 1) dir = 0;
     last_btn_press_time = g_ms_ticks;
     count++;
     TIM2_CCR1 += (dir ? step : -step);
-    if (TIM2_CCR1 <= 100) dir = 1;
-    if (TIM2_CCR1 >= 900) dir = 0;
   }
 }
 
